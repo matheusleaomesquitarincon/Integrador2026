@@ -1,7 +1,13 @@
 # QuizByte
 
 Plataforma fullstack para estudar Java com conteúdos teóricos, anotações e quizzes.
-Feito por Pedro Henrique Talalayv Gomes | Kaique Granato Santos Silva | Matheus Leão Mesquita Rincon | Kevin Oliveira Matos 
+
+# Colaboradores 
+
+Pedro Henrique Talalayv Gomes  
+Kaique Granato Santos Silva 
+Matheus Leão Mesquita Rincon 
+Kevin Oliveira Matos 
 
 ## Tecnologias
 
