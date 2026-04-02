@@ -4,10 +4,10 @@ Plataforma fullstack para estudar Java com conteúdos teóricos, anotações e q
 
 # Colaboradores 
 
-• Pedro Henrique Talalayv Gomes  
-• Kaique Granato Santos Silva 
-• Matheus Leão Mesquita Rincon 
-• Kevin Oliveira Matos 
+- **Pedro Henrique Talalayv Gomes**
+- **Kaique Granato Santos Silva** 
+- **Matheus Leão Mesquita Rincon**
+- **Kevin Oliveira Matos** 
 
 ## Tecnologias
 
