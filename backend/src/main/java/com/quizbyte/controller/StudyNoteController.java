@@ -1,13 +1,14 @@
 package com.quizbyte.controller;
 
+import com.quizbyte.messaging.StudyNoteMessagePublisher;
 import com.quizbyte.model.StudyNote;
 import com.quizbyte.repository.StudyNoteRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/notes")
@@ -15,9 +16,14 @@ import java.util.Optional;
 public class StudyNoteController {
 
     private final StudyNoteRepository studyNoteRepository;
+    private final StudyNoteMessagePublisher studyNoteMessagePublisher;
 
-    public StudyNoteController(StudyNoteRepository studyNoteRepository) {
+    public StudyNoteController(
+            StudyNoteRepository studyNoteRepository,
+            StudyNoteMessagePublisher studyNoteMessagePublisher
+    ) {
         this.studyNoteRepository = studyNoteRepository;
+        this.studyNoteMessagePublisher = studyNoteMessagePublisher;
     }
 
     @GetMapping
@@ -26,14 +32,15 @@ public class StudyNoteController {
     }
 
     @PostMapping
-    public StudyNote create(@Valid @RequestBody StudyNote note) {
-        return studyNoteRepository.save(note);
+    public StudyNote create(@NonNull @Valid @RequestBody StudyNote note) {
+        StudyNote saved = studyNoteRepository.save(note);
+        studyNoteMessagePublisher.publishCreated(saved);
+        return saved;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudyNote> update(@PathVariable Long id, @Valid @RequestBody StudyNote updated) {
-        Optional<StudyNote> existing = studyNoteRepository.findById(id);
-        if (existing.isEmpty()) {
+    public ResponseEntity<StudyNote> update(@NonNull @PathVariable("id") Long id, @NonNull @Valid @RequestBody StudyNote updated) {
+        if (!studyNoteRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
         updated.setId(id);
@@ -41,7 +48,7 @@ public class StudyNoteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@NonNull @PathVariable("id") Long id) {
         if (!studyNoteRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

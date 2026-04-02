@@ -3,11 +3,11 @@ package com.quizbyte.controller;
 import com.quizbyte.model.QuizQuestion;
 import com.quizbyte.repository.QuizQuestionRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/quizzes")
@@ -22,21 +22,20 @@ public class QuizController {
 
     @GetMapping
     public List<QuizQuestion> list(@RequestParam(required = false) String topic) {
-        if (topic != null && !topic.isBlank()) {
+        if (topic != null && !topic.trim().isEmpty()) {
             return quizQuestionRepository.findByTopicIgnoreCase(topic);
         }
         return quizQuestionRepository.findAll();
     }
 
     @PostMapping
-    public QuizQuestion create(@Valid @RequestBody QuizQuestion question) {
+    public QuizQuestion create(@NonNull @Valid @RequestBody QuizQuestion question) {
         return quizQuestionRepository.save(question);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<QuizQuestion> update(@PathVariable Long id, @Valid @RequestBody QuizQuestion updated) {
-        Optional<QuizQuestion> existing = quizQuestionRepository.findById(id);
-        if (existing.isEmpty()) {
+    public ResponseEntity<QuizQuestion> update(@NonNull @PathVariable("id") Long id, @NonNull @Valid @RequestBody QuizQuestion updated) {
+        if (!quizQuestionRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
         updated.setId(id);
@@ -44,7 +43,7 @@ public class QuizController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@NonNull @PathVariable("id") Long id) {
         if (!quizQuestionRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
