@@ -9,6 +9,10 @@ backend/dependency-reduced-pom.xml
 backend/buildNumber.properties
 backend/.mvn/timing.properties
 
+# Configurações sensíveis (SENHAS)
+backend/src/main/resources/application.properties
+backend/src/main/resources/application-dev.properties
+
 # Frontend (React / Vite / Node)
 frontend/node_modules/
 frontend/dist/
