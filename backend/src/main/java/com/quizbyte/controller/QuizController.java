@@ -50,5 +50,20 @@ public class QuizController {
         quizQuestionRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/validate")
+    public ResponseEntity<Boolean> validateAnswer(
+            @PathVariable("id") Long id, 
+            @RequestBody String selectedOption) {
+        
+        return quizQuestionRepository.findById(id)
+                .map(question -> {
+                    boolean isCorrect = question.getCorrectOption()
+                            .trim()
+                            .equalsIgnoreCase(selectedOption.trim().replace("\"", ""));
+                    return ResponseEntity.ok(isCorrect);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
 
