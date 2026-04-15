@@ -35,7 +35,7 @@ public class DataLoader {
             if (quizQuestionRepository.count() == 0) {
                 QuizQuestion q1 = new QuizQuestion();
                 q1.setTopic("arrays");
-                q1.setQuestion("Qual é o índice do primeiro elemento de um array em Java?");
+                q1.setQuestionText("Qual é o índice do primeiro elemento de um array em Java?");
                 q1.setOptionA("0");
                 q1.setOptionB("1");
                 q1.setOptionC("-1");
@@ -45,7 +45,7 @@ public class DataLoader {
 
                 QuizQuestion q2 = new QuizQuestion();
                 q2.setTopic("poo");
-                q2.setQuestion("Qual pilar da POO está relacionado a esconder detalhes internos de uma classe?");
+                q2.setQuestionText("Qual pilar da POO está relacionado a esconder detalhes internos de uma classe?");
                 q2.setOptionA("Herança");
                 q2.setOptionB("Encapsulamento");
                 q2.setOptionC("Polimorfismo");
@@ -64,4 +64,3 @@ public class DataLoader {
         return topic;
     }
 }
-
