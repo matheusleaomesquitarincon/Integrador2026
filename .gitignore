@@ -1,18 +1,43 @@
-# Frontend dependencies and build output
+# Backend (Spring Boot / Maven)
+backend/target/
+backend/pom.xml.tag
+backend/pom.xml.releaseBackup
+backend/pom.xml.versionsBackup
+backend/pom.xml.next
+backend/release.properties
+backend/dependency-reduced-pom.xml
+backend/buildNumber.properties
+backend/.mvn/timing.properties
+
+# Frontend (React / Vite / Node)
 frontend/node_modules/
 frontend/dist/
+frontend/dist-ssr/
+frontend/*.local
+frontend/.eslintcache
 
-# Backend build output
-backend/target/
-
-# Logs
+#Logs e Bancos de Dados locais
 *.log
+*.sqlite
+*.db
 
-# OS/editor noise
+# IDEs e Ferramentas (IntelliJ, VS Code, Eclipse)
+.idea/
+*.iml
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+.factorypath
+
+# Sistema Operacional
 .DS_Store
 Thumbs.db
-.idea/
-.vscode/
 
-#env
+#variáveis do ambiente
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
