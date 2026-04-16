@@ -1,124 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
-// import { apiUrl } from "../config/api";
-
-const API_BASE = "VITE_API_BASE_URL";
- 
-// MOCK
-const MOCK_QUESTIONS = [
-  {
-    id: 1,
-    topic: "arrays",
-    questionText: "Qual é o índice do primeiro elemento de um array em Java?",
-    optionA: "0",
-    optionB: "1",
-    optionC: "-1",
-    optionD: "Depende do tipo do array",
-    correctOption: "A" 
-  },
-  {
-    id: 2,
-    topic: "vetores",
-    questionText: "Qual é a principal diferença da classe Vector em relação a um array comum e ArrayList?",
-    optionA: "Não permite tipos primitivos",
-    optionB: "É sincronizada por padrão (Thread-safe)",
-    optionC: "Possui tamanho fixo",
-    optionD: "Só armazena Strings",
-    correctOption: "B"
-  },
-  {
-    id: 3,
-    topic: "matrizes",
-    questionText: "Como declaramos uma matriz (array bidimensional) de inteiros em Java?",
-    optionA: "int matriz[];",
-    optionB: "int[][] matriz;",
-    optionC: "int matriz[2];",
-    optionD: "Matrix<int> matriz;",
-    correctOption: "B"
-  },
-  {
-    id: 4,
-    topic: "tabelas-hash",
-    questionText: "Qual classe em Java é a implementação mais comum de uma tabela hash?",
-    optionA: "ArrayList",
-    optionB: "LinkedList",
-    optionC: "HashMap",
-    optionD: "TreeSet",
-    correctOption: "C"
-  },
-  {
-    id: 5,
-    topic: "poo",
-    title: "poo",
-    questionText: "Qual pilar da POO consiste em ocultar os detalhes internos de funcionamento de uma classe?",
-    optionA: "Herança",
-    optionB: "Polimorfismo",
-    optionC: "Abstração",
-    optionD: "Encapsulamento",
-    correctOption: "D"
-  },
-  {
-    id: 6,
-    topic: "springboot",
-    questionText: "Qual é a principal anotação utilizada para marcar a classe principal que inicia uma aplicação Spring Boot?",
-    optionA: "@SpringBootApplication",
-    optionB: "@Configuration",
-    optionC: "@EnableAutoConfiguration",
-    optionD: "@SpringApplication",
-    correctOption: "A"
-  }
-];
+import { listQuestions, validateAnswer } from "../services/quizService";
 
 const QuizPage = () => {
   const [topicFilter, setTopicFilter] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [result, setResult] = useState(null);
-
-  // MOCK COM LOCALSTORAGE (Persistência)
-  const [allQuestions, setAllQuestions] = useState(() => {
-    const saved = localStorage.getItem("quizbyte_questions_mock");
-    if (saved) {
-      return JSON.parse(saved);
-    }
-    return MOCK_QUESTIONS;
-  });
-
-  useEffect(() => {
-    localStorage.setItem("quizbyte_questions_mock", JSON.stringify(allQuestions));
-  }, [allQuestions]);
-
-  const questions = topicFilter 
-    ? allQuestions.filter(q => q.topic === topicFilter)
-    : allQuestions;
-
-  // BACKEND 
-  /*
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const query = topicFilter ? `?topic=${encodeURIComponent(topicFilter)}` : "";
-        const res = await fetch(apiUrl(`/quizzes${query}`));
-        if (res.ok) {
-          const data = await res.json();
-          setQuestions(data);
-        }
+        const data = await listQuestions(topicFilter);
+        setQuestions(data);
+      } catch (e) {
+        console.error(e);
+      } finally {
         setCurrentIndex(0);
         setSelectedOption("");
         setResult(null);
-      } catch (e) {
-        console.error(e);
       }
     };
     load();
-  }, [topicFilter]);
-  */
-
-  useEffect(() => {
-    setCurrentIndex(0);
-    setSelectedOption("");
-    setResult(null);
   }, [topicFilter]);
 
   const topicOptions = useMemo(
@@ -131,16 +34,9 @@ const QuizPage = () => {
   const handleCheck = async () => {
     if (!current || !selectedOption) return;
 
-    // BACKEND
-    /*
     try {
-      const response = await fetch(apiUrl(`/quizzes/${current.id}/validate`), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(selectedOption) // Envia apenas "A", "B", etc.
-      });
-      const isCorrect = await response.json();
-      
+      const isCorrect = await validateAnswer(current.id, selectedOption);
+
       if (isCorrect) {
         setResult({ ok: true, message: "Resposta correta! Continue assim." });
       } else {
@@ -148,17 +44,6 @@ const QuizPage = () => {
       }
     } catch (e) {
       console.error(e);
-    }
-    */
-
-    // MOCk
-    if (selectedOption === current.correctOption) {
-      setResult({ ok: true, message: "Resposta correta! Continue assim." });
-    } else {
-      setResult({
-        ok: false,
-        message: `Resposta incorreta. A alternativa correta é a letra ${current.correctOption}.`
-      });
     }
   };
 
@@ -204,9 +89,8 @@ const QuizPage = () => {
           <div className="topic-chip" style={{ display: "inline-block", padding: "0.3rem 0.8rem", backgroundColor: "#3b82f6", color: "#fff", borderRadius: "16px", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "1rem" }}>
             {current.topic.toUpperCase()}
           </div>
-          
+
           <h2 style={{ marginTop: "0.6rem", fontSize: "1.3rem", lineHeight: "1.5", color: "#fff" }}>
-            {/* Utilizando questionText  */}
             {current.questionText}
           </h2>
 
@@ -228,7 +112,7 @@ const QuizPage = () => {
                   transition: "0.2s"
                 }}
               >
-                <strong style={{ color: selectedOption === key ? "#a78bfa" : "#fff", marginRight: "10px" }}>{key})</strong> 
+                <strong style={{ color: selectedOption === key ? "#a78bfa" : "#fff", marginRight: "10px" }}>{key})</strong>
                 {current[`option${key}`]}
               </button>
             ))}
