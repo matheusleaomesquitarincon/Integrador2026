@@ -1,7 +1,7 @@
 package com.quizbyte.controller;
 
 import com.quizbyte.model.QuizQuestion;
-import com.quizbyte.repository.QuizQuestionRepository;
+import com.quizbyte.service.QuizService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -14,56 +14,44 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class QuizController {
 
-    private final QuizQuestionRepository quizQuestionRepository;
+    private final QuizService quizService;
 
-    public QuizController(QuizQuestionRepository quizQuestionRepository) {
-        this.quizQuestionRepository = quizQuestionRepository;
+    public QuizController(QuizService quizService) {
+        this.quizService = quizService;
     }
 
     @GetMapping
     public List<QuizQuestion> list(@RequestParam(required = false) String topic) {
-        if (topic != null && !topic.trim().isEmpty()) {
-            return quizQuestionRepository.findByTopicIgnoreCase(topic);
-        }
-        return quizQuestionRepository.findAll();
+        return quizService.listByTopic(topic);
     }
 
     @PostMapping
     public QuizQuestion create(@NonNull @Valid @RequestBody QuizQuestion question) {
-        return quizQuestionRepository.save(question);
+        return quizService.create(question);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<QuizQuestion> update(@NonNull @PathVariable("id") Long id, @NonNull @Valid @RequestBody QuizQuestion updated) {
-        if (!quizQuestionRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        updated.setId(id);
-        return ResponseEntity.ok(quizQuestionRepository.save(updated));
+        return quizService.update(id, updated)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@NonNull @PathVariable("id") Long id) {
-        if (!quizQuestionRepository.existsById(id)) {
+        if (!quizService.delete(id)) {
             return ResponseEntity.notFound().build();
         }
-        quizQuestionRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/validate")
     public ResponseEntity<Boolean> validateAnswer(
-            @PathVariable("id") Long id, 
+            @PathVariable("id") Long id,
             @RequestBody String selectedOption) {
-        
-        return quizQuestionRepository.findById(id)
-                .map(question -> {
-                    boolean isCorrect = question.getCorrectOption()
-                            .trim()
-                            .equalsIgnoreCase(selectedOption.trim().replace("\"", ""));
-                    return ResponseEntity.ok(isCorrect);
-                })
+
+        return quizService.validateAnswer(id, selectedOption)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 }
-
