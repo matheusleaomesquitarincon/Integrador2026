@@ -21,7 +21,6 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .httpBasic(Customizer.withDefaults())
             .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();
