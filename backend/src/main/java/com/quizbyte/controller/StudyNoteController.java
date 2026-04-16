@@ -5,6 +5,7 @@ import com.quizbyte.model.StudyNote;
 import com.quizbyte.repository.StudyNoteRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -32,6 +33,7 @@ public class StudyNoteController {
     }
 
     @PostMapping
+    @Transactional
     public StudyNote create(@NonNull @Valid @RequestBody StudyNote note) {
         StudyNote saved = studyNoteRepository.save(note);
         studyNoteMessagePublisher.publishCreated(saved);
