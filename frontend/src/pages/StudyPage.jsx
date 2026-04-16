@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-//import { apiUrl } from "../config/api"; 
-
-const API_BASE = "VITE_API_BASE_URL"; 
+import { listNotes, createNote, deleteNote } from "../services/studyNoteService";
 
 const StudyPage = () => {
   const [title, setTitle] = useState("");
@@ -14,49 +12,54 @@ const StudyPage = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState(null);
 
-  const [notes, setNotes] = useState(() => {
-    const savedNotes = localStorage.getItem("quizbyte_notes_mock");
-    return savedNotes ? JSON.parse(savedNotes) : []; 
-  });
+  const [notes, setNotes] = useState([]);
 
-  useEffect(() => {
-    localStorage.setItem("quizbyte_notes_mock", JSON.stringify(notes));
-  }, [notes]);
-
-  // Código do Backend
-  /*
   const loadNotes = async () => {
     try {
-      const res = await fetch(apiUrl("/notes"));
-      const data = await res.json();
+      const data = await listNotes();
       setNotes(data);
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
   };
-  useEffect(() => { loadNotes(); }, []);
-  */
+
+  useEffect(() => {
+    loadNotes();
+  }, []);
 
   const handleSave = async (e) => {
     e.preventDefault();
     if (!title.trim() || !text.trim()) return;
     setLoading(true);
 
-    setTimeout(() => {
-      const newNote = { id: Date.now(), title: title.trim(), text: text.trim() };
-      setNotes((prevNotes) => [newNote, ...prevNotes]);
-      setTitle(""); setText(""); setLoading(false);
-    }, 500); 
+    try {
+      const saved = await createNote({ title: title.trim(), text: text.trim() });
+      setNotes((prev) => [saved, ...prev]);
+      setTitle("");
+      setText("");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const askDelete = (e, note) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     setNoteToDelete(note);
     setDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    setNotes(notes.filter(n => n.id !== noteToDelete.id));
-    setDeleteModalOpen(false);
-    setNoteToDelete(null);
+  const confirmDelete = async () => {
+    try {
+      await deleteNote(noteToDelete.id);
+      setNotes((prev) => prev.filter((n) => n.id !== noteToDelete.id));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDeleteModalOpen(false);
+      setNoteToDelete(null);
+    }
   };
 
   const filteredNotes = notes.filter((note) => {
@@ -71,7 +74,7 @@ const StudyPage = () => {
   return (
     <div className="card">
       <h1 className="title">Área de estudo</h1>
-      
+
       <form onSubmit={handleSave} style={{ marginTop: "1rem" }}>
         <div className="label">Tópico</div>
         <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Arrays" />
@@ -84,17 +87,17 @@ const StudyPage = () => {
 
       <div className="notes-section" style={{ marginTop: "3rem" }}>
         {notes.length > 0 && (
-          <input 
-            className="input" 
-            placeholder="🔍 Pesquisar..." 
-            value={searchTerm} 
-            onChange={(e) => { setSearchTerm(e.target.value); setShowAllNotes(true); }} 
+          <input
+            className="input"
+            placeholder="🔍 Pesquisar..."
+            value={searchTerm}
+            onChange={(e) => { setSearchTerm(e.target.value); setShowAllNotes(true); }}
           />
         )}
 
-        <div 
-          className="notes-list" 
-          style={{ 
+        <div
+          className="notes-list"
+          style={{
             marginTop: "1.5rem",
             maxHeight: (isScrollable && showAllNotes) ? "400px" : "none",
             overflowY: (isScrollable && showAllNotes) ? "auto" : "visible",
@@ -102,19 +105,18 @@ const StudyPage = () => {
           }}
         >
           {displayedNotes.map((note) => (
-            <div 
-              key={note.id} 
-              className="note-item" 
-              onClick={() => setSelectedNote(note)} 
+            <div
+              key={note.id}
+              className="note-item"
+              onClick={() => setSelectedNote(note)}
               style={{ cursor: "pointer", position: "relative" }}
             >
               <div className="note-title">{note.title}</div>
               <div className="note-text" style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", paddingRight: "30px" }}>
                 {note.text}
               </div>
-              
-              {/* BOTÃO DE LIXEIRA */}
-              <button 
+
+              <button
                 onClick={(e) => askDelete(e, note)}
                 style={{
                   position: "absolute",
@@ -136,8 +138,8 @@ const StudyPage = () => {
         </div>
 
         {hasExpandButton && searchTerm === "" && (
-          <button 
-            className="button-link" 
+          <button
+            className="button-link"
             onClick={() => setShowAllNotes(!showAllNotes)}
             style={{ color: "#a78bfa", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", marginTop: "10px" }}
           >
@@ -146,7 +148,6 @@ const StudyPage = () => {
         )}
       </div>
 
-      {/* MODAL DE DETALHE */}
       {selectedNote && (
         <div className="modal-overlay" onClick={() => setSelectedNote(null)} style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.8)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
           <div className="modal-content" onClick={e => e.stopPropagation()} style={{ backgroundColor: "#1e1e2e", padding: "2rem", borderRadius: "12px", maxWidth: "500px", width: "90%", position: "relative" }}>
@@ -157,7 +158,6 @@ const StudyPage = () => {
         </div>
       )}
 
-      {/* MODAL DE CONFIRMAÇÃO DE EXCLUSÃO */}
       {deleteModalOpen && (
         <div className="modal-overlay" style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.9)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1100 }}>
           <div className="modal-content" style={{ backgroundColor: "#1e1e2e", padding: "2rem", borderRadius: "12px", textAlign: "center", maxWidth: "400px", width: "90%" }}>
@@ -166,13 +166,13 @@ const StudyPage = () => {
               Tem certeza que deseja apagar "<strong>{noteToDelete?.title}</strong>"? Esta ação não pode ser desfeita.
             </p>
             <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
-              <button 
+              <button
                 onClick={() => setDeleteModalOpen(false)}
                 style={{ padding: "0.8rem 1.5rem", borderRadius: "8px", border: "1px solid #333", background: "none", color: "#fff", cursor: "pointer" }}
               >
                 Cancelar
               </button>
-              <button 
+              <button
                 onClick={confirmDelete}
                 style={{ padding: "0.8rem 1.5rem", borderRadius: "8px", border: "none", background: "#ef4444", color: "#fff", cursor: "pointer", fontWeight: "bold" }}
               >
