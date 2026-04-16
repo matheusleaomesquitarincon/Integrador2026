@@ -4,6 +4,7 @@ import com.quizbyte.messaging.StudyNoteMessagePublisher;
 import com.quizbyte.model.StudyNote;
 import com.quizbyte.repository.StudyNoteRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,7 @@ public class StudyNoteService {
         return studyNoteRepository.findAll();
     }
 
+    @Transactional
     public StudyNote create(StudyNote note) {
         StudyNote saved = studyNoteRepository.save(note);
         studyNoteMessagePublisher.publishCreated(saved);

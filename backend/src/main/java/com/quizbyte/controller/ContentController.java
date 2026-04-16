@@ -1,6 +1,7 @@
 package com.quizbyte.controller;
 
-import com.quizbyte.model.ContentTopic;
+import com.quizbyte.dto.ContentTopicResponse;
+import com.quizbyte.mapper.ContentTopicMapper;
 import com.quizbyte.service.ContentService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,9 @@ public class ContentController {
     }
 
     @GetMapping
-    public List<ContentTopic> list() {
-        return contentService.listAll();
+    public List<ContentTopicResponse> list() {
+        return contentService.listAll().stream()
+                .map(ContentTopicMapper::toResponse)
+                .toList();
     }
 }

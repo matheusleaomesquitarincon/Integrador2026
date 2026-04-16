@@ -1,6 +1,10 @@
 package com.quizbyte.controller;
 
-import com.quizbyte.model.QuizQuestion;
+import com.quizbyte.dto.AnswerValidationRequest;
+import com.quizbyte.dto.AnswerValidationResponse;
+import com.quizbyte.dto.QuizQuestionRequest;
+import com.quizbyte.dto.QuizQuestionResponse;
+import com.quizbyte.mapper.QuizQuestionMapper;
 import com.quizbyte.service.QuizService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -21,18 +25,26 @@ public class QuizController {
     }
 
     @GetMapping
-    public List<QuizQuestion> list(@RequestParam(required = false) String topic) {
-        return quizService.listByTopic(topic);
+    public List<QuizQuestionResponse> list(@RequestParam(required = false) String topic) {
+        return quizService.listByTopic(topic).stream()
+                .map(QuizQuestionMapper::toResponse)
+                .toList();
     }
 
     @PostMapping
-    public QuizQuestion create(@NonNull @Valid @RequestBody QuizQuestion question) {
-        return quizService.create(question);
+    public QuizQuestionResponse create(@NonNull @Valid @RequestBody QuizQuestionRequest request) {
+        return QuizQuestionMapper.toResponse(
+                quizService.create(QuizQuestionMapper.toEntity(request))
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<QuizQuestion> update(@NonNull @PathVariable("id") Long id, @NonNull @Valid @RequestBody QuizQuestion updated) {
-        return quizService.update(id, updated)
+    public ResponseEntity<QuizQuestionResponse> update(
+            @NonNull @PathVariable("id") Long id,
+            @NonNull @Valid @RequestBody QuizQuestionRequest request
+    ) {
+        return quizService.update(id, QuizQuestionMapper.toEntity(request))
+                .map(QuizQuestionMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -46,11 +58,12 @@ public class QuizController {
     }
 
     @PostMapping("/{id}/validate")
-    public ResponseEntity<Boolean> validateAnswer(
+    public ResponseEntity<AnswerValidationResponse> validateAnswer(
             @PathVariable("id") Long id,
-            @RequestBody String selectedOption) {
-
-        return quizService.validateAnswer(id, selectedOption)
+            @Valid @RequestBody AnswerValidationRequest request
+    ) {
+        return quizService.validateAnswer(id, request.selectedOption())
+                .map(AnswerValidationResponse::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
