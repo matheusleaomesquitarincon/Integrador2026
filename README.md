@@ -11,7 +11,7 @@ Plataforma fullstack para estudar Java com conteúdos teóricos, anotações e q
 
 ## Tecnologias
 
-- **Backend**: Spring Boot 3 (Java 17, Maven, H2 em memória)
+- **Backend**: Spring Boot 3.3 (Java 21, Maven, H2 em memória)
 - **Frontend**: React + Vite
 
 ## Estrutura
