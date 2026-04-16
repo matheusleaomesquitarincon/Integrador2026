@@ -1,10 +1,11 @@
 package com.quizbyte.controller;
 
-import com.quizbyte.model.StudyNote;
+import com.quizbyte.dto.StudyNoteRequest;
+import com.quizbyte.dto.StudyNoteResponse;
+import com.quizbyte.mapper.StudyNoteMapper;
 import com.quizbyte.service.StudyNoteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -22,19 +23,26 @@ public class StudyNoteController {
     }
 
     @GetMapping
-    public List<StudyNote> list() {
-        return studyNoteService.listAll();
+    public List<StudyNoteResponse> list() {
+        return studyNoteService.listAll().stream()
+                .map(StudyNoteMapper::toResponse)
+                .toList();
     }
 
     @PostMapping
-    @Transactional
-    public StudyNote create(@NonNull @Valid @RequestBody StudyNote note) {
-        return studyNoteService.create(note);
+    public StudyNoteResponse create(@NonNull @Valid @RequestBody StudyNoteRequest request) {
+        return StudyNoteMapper.toResponse(
+                studyNoteService.create(StudyNoteMapper.toEntity(request))
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudyNote> update(@NonNull @PathVariable("id") Long id, @NonNull @Valid @RequestBody StudyNote updated) {
-        return studyNoteService.update(id, updated)
+    public ResponseEntity<StudyNoteResponse> update(
+            @NonNull @PathVariable("id") Long id,
+            @NonNull @Valid @RequestBody StudyNoteRequest request
+    ) {
+        return studyNoteService.update(id, StudyNoteMapper.toEntity(request))
+                .map(StudyNoteMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
