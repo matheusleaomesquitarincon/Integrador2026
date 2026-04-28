@@ -1,7 +1,7 @@
 package com.quizbyte.controller;
 
 import com.quizbyte.model.ContentTopic;
-import com.quizbyte.repository.ContentTopicRepository;
+import com.quizbyte.service.ContentService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,15 +14,14 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class ContentController {
 
-    private final ContentTopicRepository contentTopicRepository;
+    private final ContentService contentService;
 
-    public ContentController(ContentTopicRepository contentTopicRepository) {
-        this.contentTopicRepository = contentTopicRepository;
+    public ContentController(ContentService contentService) {
+        this.contentService = contentService;
     }
 
     @GetMapping
     public List<ContentTopic> list() {
-        return contentTopicRepository.findAll();
+        return contentService.listAll();
     }
 }
-
