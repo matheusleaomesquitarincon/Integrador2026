@@ -1186,6 +1186,7 @@ body {
 }
 
 .trail-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
@@ -1197,13 +1198,63 @@ body {
   text-align: left;
   font: inherit;
   cursor: pointer;
-  transition: border-color 0.15s ease-out, transform 0.1s ease-out, box-shadow 0.15s ease-out;
+  transition: border-color 0.15s ease-out, transform 0.1s ease-out, box-shadow 0.15s ease-out, background 0.15s ease-out;
 }
 
 .trail-card:hover {
   border-color: var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+.trail-card.completed {
+  background: #16a34a;
+  border-color: #15803d;
+  color: #ffffff;
+}
+
+.trail-card.completed h3,
+.trail-card.completed p,
+.trail-card.completed .trail-card-meta {
+  color: #ffffff;
+}
+
+.trail-card.completed p {
+  opacity: 0.92;
+}
+
+.trail-card.completed .trail-card-meta {
+  opacity: 0.82;
+}
+
+.trail-card.completed .trail-card-icon {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.trail-card.completed:hover {
+  border-color: #166534;
+  box-shadow: 0 10px 22px rgba(22, 163, 74, 0.4);
+}
+
+.trail-card-check {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--success);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--success);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.trail-card-check svg {
+  stroke-width: 3;
 }
 
 .trail-card-icon {
@@ -2540,3 +2591,592 @@ body {
     flex-wrap: wrap;
   }
 }
+
+/* ===== Quick Note Orb (FAB nas trilhas) ===== */
+
+.quick-note-orb {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color: var(--on-primary);
+  box-shadow: var(--shadow-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.quick-note-orb:hover {
+  transform: translateY(-2px) scale(1.04);
+  filter: brightness(1.05);
+  box-shadow: 0 18px 36px var(--primary-soft);
+}
+
+.quick-note-orb:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.quick-note-orb.open {
+  background: var(--surface-elevated);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-soft);
+}
+
+.quick-note-panel {
+  position: fixed;
+  right: 1.5rem;
+  bottom: calc(1.5rem + 56px + 0.8rem);
+  width: 360px;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-strong);
+  padding: 1rem 1.1rem;
+  z-index: 60;
+  animation: quick-note-pop 0.18s ease-out;
+}
+
+@keyframes quick-note-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.quick-note-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.quick-note-header strong {
+  font-size: 1rem;
+  color: var(--text);
+  display: block;
+}
+
+.quick-note-header p {
+  margin: 0.15rem 0 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.quick-note-textarea {
+  min-height: 140px;
+}
+
+.quick-note-status {
+  margin: 0.2rem 0 0.6rem 0;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.quick-note-status.success {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.quick-note-status.error {
+  background: var(--error-bg);
+  color: var(--error);
+  border: 1px solid var(--error);
+}
+
+.quick-note-actions {
+  align-items: center;
+}
+
+.quick-note-actions .button-primary {
+  margin-top: 0;
+}
+
+@media (max-width: 540px) {
+  .quick-note-orb {
+    right: 1rem;
+    bottom: 1rem;
+    width: 52px;
+    height: 52px;
+  }
+
+  .quick-note-panel {
+    right: 1rem;
+    left: 1rem;
+    width: auto;
+    max-width: none;
+    bottom: calc(1rem + 52px + 0.6rem);
+  }
+}
+
+/* ===== Comunidade / Fórum ===== */
+
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.6);
+  animation: live-pulse 1.6s ease-out infinite;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.6); }
+  70% { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
+/* Header do feed */
+.community-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.community-header-text {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.community-header-text .title,
+.community-header-text .subtitle {
+  margin: 0;
+}
+
+.community-header-text .subtitle {
+  margin-top: 0.3rem;
+}
+
+.community-header-cta {
+  margin-top: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Voltar / formulário de nova pergunta */
+.community-back {
+  margin-bottom: 0.6rem;
+}
+
+.community-back-cta {
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.community-form {
+  margin-top: 1rem;
+}
+
+.community-form-error {
+  margin: 0.6rem 0 0.8rem 0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.6rem;
+  background: var(--error-bg);
+  border: 1px solid var(--error);
+  color: var(--error);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.community-topic-filter {
+  margin-top: 1rem;
+}
+
+/* Lista de perguntas */
+.community-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.question-card {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+.question-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-soft);
+}
+
+.question-card:active {
+  transform: translateY(1px);
+}
+
+.question-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}
+
+.question-card-title {
+  margin: 0 0 0.35rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.question-card-text {
+  margin: 0 0 0.7rem 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.question-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem 0.55rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.question-card-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  line-height: 1;
+}
+
+/* Botões da comunidade — todos compartilham a mesma altura/baseline */
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 32px;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.like-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.like-btn.active {
+  background: rgba(220, 38, 38, 0.12);
+  color: var(--danger);
+  border-color: rgba(220, 38, 38, 0.4);
+}
+
+.badge-accepted {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--success-bg);
+  color: var(--success);
+  line-height: 1;
+}
+
+/* Detalhe da pergunta */
+.question-detail {
+  margin-top: 0.4rem;
+}
+
+.question-detail-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.question-detail-title {
+  margin: 0.5rem 0 0 0;
+  word-break: break-word;
+}
+
+.question-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0.5rem 0 0.8rem 0;
+  flex-wrap: wrap;
+}
+
+.meta-edited {
+  font-style: italic;
+}
+
+.question-body,
+.answer-body {
+  margin: 0.4rem 0 0.8rem 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.question-edit-form {
+  margin-top: 0.8rem;
+}
+
+/* Action rows — normaliza altura, gap e alinhamento */
+.question-actions,
+.answer-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.8rem;
+}
+
+.question-actions > *,
+.answer-actions > * {
+  margin-top: 0 !important;
+}
+
+.question-actions .button-primary,
+.answer-actions .button-primary,
+.question-actions .button-secondary,
+.answer-actions .button-secondary {
+  height: 36px;
+  padding: 0 0.95rem;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  line-height: 1;
+}
+
+.question-actions .like-btn,
+.answer-actions .like-btn {
+  height: 36px;
+  padding: 0 0.85rem;
+  font-size: 0.85rem;
+}
+
+.question-actions .icon-button,
+.answer-actions .icon-button {
+  width: 36px;
+  height: 36px;
+}
+
+/* Botão destrutivo nas action rows: vira "outline" alinhado ao secondary */
+.question-actions .danger-button,
+.answer-actions .danger-button {
+  height: 36px;
+  padding: 0 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.question-actions .danger-button:hover,
+.answer-actions .danger-button:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* Reaproveita o mesmo tratamento no editor inline (margin-top do primary
+   atrapalha quando está em linha com o secondary/cancelar) */
+.community-form .editor-actions,
+.community .editor-actions,
+.question-edit-form .editor-actions,
+.answer-form .editor-actions {
+  align-items: center;
+}
+
+.community-form .editor-actions .button-primary,
+.community .editor-actions .button-primary,
+.question-edit-form .editor-actions .button-primary,
+.answer-form .editor-actions .button-primary {
+  margin-top: 0;
+}
+
+/* Cabeçalho das respostas */
+.answers-heading {
+  font-size: 1.1rem;
+  margin: 1.6rem 0 0.6rem 0;
+  color: var(--text);
+}
+
+.answers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 0.4rem;
+}
+
+.answer-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.95rem 1rem;
+}
+
+.answer-card.accepted {
+  border-color: var(--success);
+  box-shadow: 0 0 0 1px var(--success-bg) inset;
+}
+
+.answer-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.answer-form {
+  margin-top: 1rem;
+}
+
+.active-accept {
+  border-color: var(--success) !important;
+  color: var(--success) !important;
+}
+
+/* Modais de confirmação */
+.community-confirm-modal {
+  text-align: center;
+  max-width: 420px;
+}
+
+.community-confirm-title {
+  margin: 0 0 0.8rem 0;
+  font-size: 1.15rem;
+  color: var(--text);
+}
+
+.community-confirm-text {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-muted);
+}
+
+.community-confirm-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.community-confirm-actions .button-secondary,
+.community-confirm-actions .danger-button {
+  margin-top: 0;
+}
+
+/* Responsividade */
+@media (max-width: 720px) {
+  .question-card {
+    padding: 0.9rem;
+  }
+
+  .question-card-title {
+    font-size: 1rem;
+  }
+
+  .answer-card {
+    padding: 0.85rem;
+  }
+
+  .answers-heading {
+    margin-top: 1.2rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .community-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .community-header-cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .question-actions,
+  .answer-actions {
+    width: 100%;
+  }
+
+  .question-actions .button-primary,
+  .question-actions .button-secondary,
+  .question-actions .danger-button,
+  .answer-actions .button-primary,
+  .answer-actions .button-secondary,
+  .answer-actions .danger-button {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .question-actions .like-btn,
+  .answer-actions .like-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .question-actions .icon-button,
+  .answer-actions .icon-button {
+    flex: 0 0 auto;
+  }
+
+  .community-confirm-actions .button-secondary,
+  .community-confirm-actions .danger-button {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+

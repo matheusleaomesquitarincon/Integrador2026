@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .antMatchers("/api/auth/register", "/api/auth/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/contents/**", "/api/quizzes/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated()
             )
             .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))

@@ -4,6 +4,7 @@ import Icon from "../components/Icon";
 import { listNotes } from "../services/studyNoteService";
 import { listContents } from "../services/contentService";
 import { useAuth } from "../contexts/AuthContext";
+import { ROADMAPS, countTopics, getAllSlugs } from "../data/roadmaps";
 
 const HERO_KEY = "quizbyte-hero-dismissed";
 
@@ -139,6 +140,13 @@ const HomePage = () => {
     [notes]
   );
 
+  const availableRoadmaps = useMemo(() => {
+    const slugSet = new Set(topics.map((t) => t.slug));
+    return ROADMAPS.filter((rm) =>
+      getAllSlugs(rm).some((s) => slugSet.has(s))
+    );
+  }, [topics]);
+
   const dismissHero = () => {
     setHeroDismissed(true);
     try {
@@ -206,30 +214,30 @@ const HomePage = () => {
         </div>
       </section>
 
-      {topics.length > 0 && (
+      {availableRoadmaps.length > 0 && (
         <section className="home-section">
           <div className="section-heading">
-            <h2>Tópicos disponíveis</h2>
+            <h2>Trilhas disponíveis</h2>
             <Link to="/conteudos" className="section-link">
-              Ver todos
+              Ver todas
               <Icon name="chevronRight" size={14} />
             </Link>
           </div>
           <p className="section-description">
-            Sete áreas cobertas. Cada tópico tem teoria e questões de quiz prontas
-            pra você praticar.
+            Cada trilha é um caminho independente, com tópicos em ordem
+            recomendada. Escolha por onde começar.
           </p>
           <div className="topics-grid">
-            {topics.map((topic) => (
+            {availableRoadmaps.map((rm) => (
               <Link
-                key={topic.slug}
-                to={`/conteudos?topic=${encodeURIComponent(topic.slug)}`}
+                key={rm.id}
+                to="/conteudos"
                 className="topic-card"
               >
-                <h3>{topic.title}</h3>
-                <p>{topic.description}</p>
+                <h3>{rm.title}</h3>
+                <p>{rm.description}</p>
                 <span className="topic-card-cta">
-                  Ir para o tópico
+                  {countTopics(rm)} tópicos
                   <Icon name="arrowRight" size={14} />
                 </span>
               </Link>

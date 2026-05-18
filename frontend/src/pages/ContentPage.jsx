@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
 import { listContents } from "../services/contentService";
 import Icon from "../components/Icon";
+import QuickNoteOrb from "../components/QuickNoteOrb";
 import { useProgress } from "../contexts/ProgressContext";
 import {
   TOPIC_DEFINITIONS,
@@ -93,23 +94,37 @@ const ContentPage = () => {
           </p>
 
           <div className="trails-grid">
-            {ROADMAPS.map((rm) => (
-              <button
-                key={rm.id}
-                type="button"
-                className="trail-card"
-                onClick={() => setSelectedRoadmapId(rm.id)}
-              >
-                <span className="trail-card-icon">
-                  <Icon name={rm.icon} size={22} />
-                </span>
-                <h3>{rm.title}</h3>
-                <p>{rm.description}</p>
-                <span className="trail-card-meta">
-                  {countTopics(rm)} tópicos
-                </span>
-              </button>
-            ))}
+            {ROADMAPS.map((rm) => {
+              const trailSlugs = getAllSlugs(rm);
+              const availableTrailSlugs = trailSlugs.filter((s) => topicBySlug[s]);
+              const doneCount = availableTrailSlugs.filter((s) => isCompleted(s)).length;
+              const trailDone =
+                availableTrailSlugs.length > 0 &&
+                doneCount === availableTrailSlugs.length;
+              return (
+                <button
+                  key={rm.id}
+                  type="button"
+                  className={`trail-card ${trailDone ? "completed" : ""}`}
+                  onClick={() => setSelectedRoadmapId(rm.id)}
+                >
+                  <span className="trail-card-icon">
+                    <Icon name={rm.icon} size={22} />
+                  </span>
+                  <h3>{rm.title}</h3>
+                  <p>{rm.description}</p>
+                  <span className="trail-card-meta">
+                    {countTopics(rm)} tópicos
+                    {trailDone && " · concluída"}
+                  </span>
+                  {trailDone && (
+                    <span className="trail-card-check" aria-label="Concluída">
+                      <Icon name="check" size={14} />
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </>
       ) : (
@@ -231,6 +246,7 @@ const ContentPage = () => {
         </>
       )}
 
+      <QuickNoteOrb />
     </div>
   );
 };

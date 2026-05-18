@@ -8,6 +8,8 @@ import CertificatePage from "./pages/CertificatePage";
 import QuizPage from "./pages/QuizPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
+import CommunityPage from "./pages/CommunityPage";
+import QuestionDetailPage from "./pages/QuestionDetailPage";
 import Icon from "./components/Icon";
 import { useAuth } from "./contexts/AuthContext";
 
@@ -69,6 +71,9 @@ const App = () => {
             <NavLink to="/quiz" className="nav-link">
               Quiz
             </NavLink>
+            <NavLink to="/comunidade" className="nav-link">
+              Comunidade
+            </NavLink>
             <NavLink to="/perfil" className="nav-link">
               Perfil
             </NavLink>
@@ -106,6 +111,8 @@ const App = () => {
           <Route path="/certificado/:trailId" element={<CertificatePage />} />
           <Route path="/estudo" element={<StudyPage />} />
           <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/comunidade" element={<CommunityPage />} />
+          <Route path="/comunidade/:id" element={<QuestionDetailPage />} />
           <Route path="/perfil" element={<ProfilePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

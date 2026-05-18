@@ -15,18 +15,70 @@ public class DataLoader {
     CommandLineRunner initDatabase(ContentTopicRepository contentTopicRepository,
                                    QuizQuestionRepository quizQuestionRepository) {
         return args -> {
+            // Trilha: Java — Início
+            upsertTopic(contentTopicRepository, "ambiente-java", "Configurando o Ambiente",
+                    "Instalar JDK, escolher IDE (IntelliJ, VS Code, Eclipse) e rodar o primeiro programa.");
+            upsertTopic(contentTopicRepository, "jvm-compilacao", "Compilação e JVM",
+                    "Como Java compila pra bytecode e roda em qualquer SO via JVM. javac vs java, JRE vs JDK.");
+            upsertTopic(contentTopicRepository, "sintaxe-java", "Sintaxe Java",
+                    "Estrutura básica de um programa Java: classe, método main, comentários e convenções.");
+            upsertTopic(contentTopicRepository, "primitivos-wrapper", "Primitivos vs Wrapper",
+                    "Diferença entre int/Integer, double/Double, autoboxing e unboxing.");
+            upsertTopic(contentTopicRepository, "pacotes-imports", "Pacotes e Imports",
+                    "Organização de classes em pacotes, import, classpath e convenções.");
+            upsertTopic(contentTopicRepository, "javadoc", "Documentação Javadoc",
+                    "Comentários estruturados com /** */, tags @param, @return e geração de HTML.");
+
             upsertTopic(contentTopicRepository, "arrays", "Arrays em Java",
                     "Introdução a arrays, como declarar, inicializar e percorrer.");
             upsertTopic(contentTopicRepository, "vetores", "Vetores",
                     "Vetores em Java (arrays unidimensionais) e boas práticas.");
             upsertTopic(contentTopicRepository, "matrizes", "Matrizes",
                     "Matrizes (arrays bidimensionais) para representar tabelas.");
+            upsertTopic(contentTopicRepository, "listas", "Listas Dinâmicas",
+                    "ArrayList vs LinkedList. Quando usar cada, performance, métodos principais.");
+            upsertTopic(contentTopicRepository, "sets", "Sets",
+                    "HashSet, TreeSet, LinkedHashSet. Coleções sem duplicados.");
             upsertTopic(contentTopicRepository, "tabelas-hash", "Tabela Hash",
                     "Uso de HashMap e outras estruturas baseadas em hash.");
-            upsertTopic(contentTopicRepository, "poo", "Programação Orientada a Objetos",
-                    "Abstração, encapsulamento, herança e polimorfismo em Java.");
-            upsertTopic(contentTopicRepository, "springboot", "Spring Boot",
-                    "Criação de APIs REST com Spring Boot.");
+            upsertTopic(contentTopicRepository, "pilhas-filas", "Pilhas e Filas",
+                    "Stack (LIFO), Queue (FIFO), Deque, PriorityQueue.");
+            upsertTopic(contentTopicRepository, "iteradores", "Iteradores",
+                    "Iterator, Iterable, for-each. Remoção segura durante iteração.");
+            upsertTopic(contentTopicRepository, "comparator", "Comparator e Comparable",
+                    "Ordenação customizada de objetos com Comparable e Comparator.");
+            upsertTopic(contentTopicRepository, "imutaveis", "Coleções Imutáveis",
+                    "List.of, Map.of, Collections.unmodifiableList. Boas práticas modernas.");
+            upsertTopic(contentTopicRepository, "streams", "Stream API",
+                    "Processamento funcional de coleções: filter, map, collect, reduce.");
+            upsertTopic(contentTopicRepository, "encapsulamento", "Encapsulamento",
+                    "Modificadores de acesso, getters/setters, ocultação de estado interno.");
+            upsertTopic(contentTopicRepository, "heranca", "Herança",
+                    "extends, super, hierarquia de classes, quando NÃO usar herança.");
+            upsertTopic(contentTopicRepository, "polimorfismo", "Polimorfismo",
+                    "Overriding, late binding, casting de objetos, instanceof.");
+            upsertTopic(contentTopicRepository, "abstracao", "Abstração",
+                    "Classes abstratas, interfaces, default methods, quando usar cada.");
+            upsertTopic(contentTopicRepository, "spring-intro", "Introdução ao Spring Boot",
+                    "O que é Spring Boot, Spring Initializr, primeiro projeto, @SpringBootApplication.");
+            upsertTopic(contentTopicRepository, "spring-di", "Injeção de Dependências",
+                    "IoC container, @Component, @Service, @Repository, @Autowired, constructor injection.");
+            upsertTopic(contentTopicRepository, "spring-config", "Properties e Configuração",
+                    "application.properties/yml, profiles dev/prod, @Value, @ConfigurationProperties.");
+            upsertTopic(contentTopicRepository, "spring-beans", "Beans e Ciclo de Vida",
+                    "@Bean, @Configuration, escopos singleton/prototype, @PostConstruct, @PreDestroy.");
+            upsertTopic(contentTopicRepository, "spring-rest", "REST APIs",
+                    "@RestController, @GetMapping/PostMapping, @PathVariable, @RequestBody, ResponseEntity.");
+            upsertTopic(contentTopicRepository, "spring-validation", "Validação de Dados",
+                    "@Valid, Bean Validation (@NotNull, @Email, @Size), mensagens customizadas.");
+            upsertTopic(contentTopicRepository, "spring-exceptions", "Tratamento de Exceções",
+                    "@ControllerAdvice, @ExceptionHandler, retorno JSON estruturado, status codes.");
+            upsertTopic(contentTopicRepository, "spring-security", "Spring Security",
+                    "Autenticação, autorização, configuração de rotas públicas/privadas, BCrypt.");
+            upsertTopic(contentTopicRepository, "spring-jpa-entities", "Entidades JPA",
+                    "@Entity, @Table, @Id, @GeneratedValue, relacionamentos @OneToMany e @ManyToOne.");
+            upsertTopic(contentTopicRepository, "spring-data-jpa", "Spring Data JPA",
+                    "JpaRepository, derived queries, @Query JPQL, paginação e ordenação.");
 
             // Trilha: Fundamentos & Lógica
             upsertTopic(contentTopicRepository, "algoritmos", "Algoritmos e Pseudocódigo",
