@@ -1,0 +1,46 @@
+# =================================================================
+# Cópia para application.properties (não versionado) e ajuste.
+#
+# Datasource — Supabase (Postgres)
+# =================================================================
+# Project ref: ftlnhfeoxsolstdsmvmr
+# A senha vem da variável de ambiente SUPABASE_DB_PASSWORD.
+# Pegue em: Supabase Dashboard → Project Settings → Database
+spring.datasource.url=jdbc:postgresql://db.ftlnhfeoxsolstdsmvmr.supabase.co:5432/postgres?sslmode=require
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.username=postgres
+spring.datasource.password=${SUPABASE_DB_PASSWORD:}
+
+# Para usar H2 file-based local (dev offline), comente acima e descomente:
+# spring.datasource.url=jdbc:h2:file:./data/quizbyte;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+# spring.datasource.driver-class-name=org.h2.Driver
+# spring.datasource.username=sa
+# spring.datasource.password=
+
+# =================================================================
+# JPA / Hibernate
+# =================================================================
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.open-in-view=false
+spring.jpa.properties.hibernate.jdbc.time_zone=UTC
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+# =================================================================
+# H2 console (só faz sentido com H2 ativo)
+# =================================================================
+spring.h2.console.enabled=false
+spring.h2.console.path=/h2-console
+
+# =================================================================
+# Server
+# =================================================================
+server.port=8080
+server.servlet.session.cookie.same-site=lax
+server.servlet.session.cookie.http-only=true
+server.servlet.session.timeout=7d
+
+# =================================================================
+# Logging
+# =================================================================
+logging.level.org.springframework.security=INFO
+logging.level.org.hibernate.SQL=WARN
