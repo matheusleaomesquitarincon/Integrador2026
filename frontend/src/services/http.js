@@ -28,6 +28,8 @@ const parseBody = async (res) => {
   }
 };
 
+const AUTH_PATHS = ["/auth/login", "/auth/register", "/auth/me", "/auth/logout"];
+
 const request = async (path, options = {}) => {
   const { headers: extraHeaders, ...rest } = options;
   const res = await fetch(apiUrl(path), {
@@ -41,6 +43,12 @@ const request = async (path, options = {}) => {
   const body = await parseBody(res);
 
   if (!res.ok) {
+    // Sessão expirou em algum endpoint protegido — avisa o app pra recarregar o auth
+    if (res.status === 401 && !AUTH_PATHS.some((p) => path.startsWith(p))) {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("quizbyte:session-expired", { detail: { path } }));
+      }
+    }
     throw new HttpError(res.status, body, path);
   }
 

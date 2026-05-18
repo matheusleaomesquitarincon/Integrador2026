@@ -55,7 +55,7 @@ public class SecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authorizeRequests(auth -> auth
                 .antMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/contents/**", "/api/quizzes/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/contents/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated()

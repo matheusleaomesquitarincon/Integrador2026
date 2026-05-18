@@ -29,6 +29,19 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const handler = () => {
+      // Sessão invalidada no backend (ex: backend reiniciou).
+      // Limpa o user pro App.jsx redirecionar pra /login.
+      setUser((prev) => (prev ? null : prev));
+    };
+    if (typeof window !== "undefined") {
+      window.addEventListener("quizbyte:session-expired", handler);
+      return () => window.removeEventListener("quizbyte:session-expired", handler);
+    }
+    return undefined;
+  }, []);
+
   const login = useCallback(async (login, password) => {
     const data = await authService.login({ login, password });
     setUser(data);

@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { listContents } from "../services/contentService";
 import MarkdownView from "../components/MarkdownView";
 import Icon from "../components/Icon";
+import QuickNoteOrb from "../components/QuickNoteOrb";
 import { useProgress } from "../contexts/ProgressContext";
 
 const ContentDetailPage = () => {
@@ -89,6 +90,8 @@ const ContentDetailPage = () => {
           </button>
         </footer>
       </article>
+
+      <QuickNoteOrb />
     </div>
   );
 };

@@ -1,9 +1,17 @@
 package com.quizbyte.controller;
 
+import com.quizbyte.auth.UserPrincipal;
 import com.quizbyte.model.QuizQuestion;
+import com.quizbyte.quiz.AttemptRequest;
+import com.quizbyte.quiz.AttemptResult;
+import com.quizbyte.quiz.HistoryPointDto;
+import com.quizbyte.quiz.QuizService;
+import com.quizbyte.quiz.ThemeDetailDto;
+import com.quizbyte.quiz.ThemeDto;
 import com.quizbyte.repository.QuizQuestionRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,10 +22,15 @@ import java.util.List;
 public class QuizController {
 
     private final QuizQuestionRepository quizQuestionRepository;
+    private final QuizService quizService;
 
-    public QuizController(QuizQuestionRepository quizQuestionRepository) {
+    public QuizController(QuizQuestionRepository quizQuestionRepository,
+                          QuizService quizService) {
         this.quizQuestionRepository = quizQuestionRepository;
+        this.quizService = quizService;
     }
+
+    // ---- Endpoints legados (compat) ----
 
     @GetMapping
     public List<QuizQuestion> list(@RequestParam(required = false) String topic) {
@@ -52,9 +65,9 @@ public class QuizController {
 
     @PostMapping("/{id}/validate")
     public ResponseEntity<Boolean> validateAnswer(
-            @PathVariable("id") Long id, 
+            @PathVariable("id") Long id,
             @RequestBody String selectedOption) {
-        
+
         return quizQuestionRepository.findById(id)
                 .map(question -> {
                     boolean isCorrect = question.getCorrectOption()
@@ -64,5 +77,31 @@ public class QuizController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    // ---- Novos endpoints temáticos ----
+
+    @GetMapping("/themes")
+    public List<ThemeDto> listThemes(@AuthenticationPrincipal UserPrincipal principal) {
+        return quizService.listThemes(principal != null ? principal.getUser() : null);
+    }
+
+    @GetMapping("/themes/{slug}")
+    public ThemeDetailDto getTheme(@NonNull @PathVariable("slug") String slug) {
+        return quizService.getTheme(slug);
+    }
+
+    @PostMapping("/themes/{slug}/attempts")
+    public AttemptResult submitAttempt(@NonNull @PathVariable("slug") String slug,
+                                       @NonNull @Valid @RequestBody AttemptRequest request,
+                                       @AuthenticationPrincipal UserPrincipal principal) {
+        return quizService.submitAttempt(slug, request, principal.getUser());
+    }
+
+    @GetMapping("/themes/{slug}/history")
+    public List<HistoryPointDto> history(@NonNull @PathVariable("slug") String slug,
+                                         @AuthenticationPrincipal UserPrincipal principal) {
+        return quizService.listHistory(slug, principal.getUser());
+    }
 }
+
 
