@@ -1,12 +1,20 @@
 package com.quizbyte.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 
 @Entity
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_content_topic_slug", columnNames = "slug")
+        }
+)
 public class ContentTopic {
 
     @Id
@@ -14,12 +22,15 @@ public class ContentTopic {
     private Long id;
 
     @NotBlank
+    @Column(nullable = false, length = 80)
     private String slug;
 
     @NotBlank
+    @Column(nullable = false, length = 200)
     private String title;
 
     @NotBlank
+    @Column(nullable = false, columnDefinition = "text")
     private String description;
 
     public ContentTopic() {

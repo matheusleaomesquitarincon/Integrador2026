@@ -114,7 +114,7 @@ const LoginPage = () => {
               </>
             ) : (
               <>
-                <div className="label">Username</div>
+                <div className="label">Username (letras, números, _ . -)</div>
                 <input
                   className="input"
                   value={username}
@@ -122,6 +122,7 @@ const LoginPage = () => {
                   autoComplete="username"
                   disabled={submitting}
                   maxLength={50}
+                  placeholder="ex: pedro_talalayv"
                 />
 
                 <div className="label">Email</div>

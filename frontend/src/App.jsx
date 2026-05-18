@@ -3,8 +3,10 @@ import { Navigate, NavLink, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import StudyPage from "./pages/StudyPage";
 import ContentPage from "./pages/ContentPage";
+import ContentDetailPage from "./pages/ContentDetailPage";
+import CertificatePage from "./pages/CertificatePage";
 import QuizPage from "./pages/QuizPage";
-import AdminPage from "./pages/AdminPage";
+import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import Icon from "./components/Icon";
 import { useAuth } from "./contexts/AuthContext";
@@ -67,8 +69,8 @@ const App = () => {
             <NavLink to="/quiz" className="nav-link">
               Quiz
             </NavLink>
-            <NavLink to="/admin" className="nav-link">
-              Admin
+            <NavLink to="/perfil" className="nav-link">
+              Perfil
             </NavLink>
           </nav>
 
@@ -100,9 +102,11 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/conteudos" element={<ContentPage />} />
+          <Route path="/conteudos/:slug" element={<ContentDetailPage />} />
+          <Route path="/certificado/:trailId" element={<CertificatePage />} />
           <Route path="/estudo" element={<StudyPage />} />
           <Route path="/quiz" element={<QuizPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/perfil" element={<ProfilePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

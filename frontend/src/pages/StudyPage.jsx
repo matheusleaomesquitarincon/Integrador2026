@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { listNotes, createNote, updateNote, deleteNote } from "../services/studyNoteService";
 import Icon from "../components/Icon";
+import MarkdownView from "../components/MarkdownView";
 
 const TOPIC_OPTIONS = [
   { value: "arrays", label: "Arrays" },
@@ -31,53 +28,6 @@ const formatRelative = (iso) => {
   if (abs < 2592000) return rtf.format(Math.round(diffSec / 86400), "day");
   if (abs < 31536000) return rtf.format(Math.round(diffSec / 2592000), "month");
   return rtf.format(Math.round(diffSec / 31536000), "year");
-};
-
-const getActiveTheme = () =>
-  (typeof document !== "undefined" && document.documentElement.getAttribute("data-theme")) || "light";
-
-const MarkdownView = ({ children }) => {
-  const [theme, setTheme] = useState(getActiveTheme);
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => setTheme(getActiveTheme()));
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => observer.disconnect();
-  }, []);
-
-  const codeStyle = theme === "dark" ? oneDark : oneLight;
-
-  return (
-    <div className="markdown">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-          code({ inline, className, children, ...props }) {
-            const match = /language-(\w+)/.exec(className || "");
-            if (inline || !match) {
-              return (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              );
-            }
-            return (
-              <SyntaxHighlighter
-                language={match[1]}
-                style={codeStyle}
-                PreTag="pre"
-                customStyle={{ background: "transparent" }}
-              >
-                {String(children).replace(/\n$/, "")}
-              </SyntaxHighlighter>
-            );
-          },
-        }}
-      >
-        {children}
-      </ReactMarkdown>
-    </div>
-  );
 };
 
 const StudyPage = () => {

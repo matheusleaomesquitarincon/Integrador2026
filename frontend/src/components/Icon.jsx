@@ -93,6 +93,7 @@ const PATHS = {
     </>
   ),
   zap: <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />,
+  play: <polygon points="5 3 19 12 5 21 5 3" />,
   terminal: (
     <>
       <polyline points="4 17 10 11 4 5" />

@@ -3,7 +3,9 @@ package com.quizbyte.repository;
 import com.quizbyte.model.ContentTopic;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ContentTopicRepository extends JpaRepository<ContentTopic, Long> {
-    ContentTopic findBySlug(String slug);
-}
+import java.util.Optional;
 
+public interface ContentTopicRepository extends JpaRepository<ContentTopic, Long> {
+
+    Optional<ContentTopic> findBySlug(String slug);
+}

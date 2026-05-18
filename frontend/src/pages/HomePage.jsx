@@ -75,12 +75,6 @@ const FEATURES = [
     description:
       "Encontre uma anotação por título ou conteúdo em tempo real. Combine com filtros de tópico e ordenação para varrer dezenas de notas em segundos.",
   },
-  {
-    icon: "unlock",
-    title: "Sem cadastro",
-    description:
-      "Nenhuma conta, nenhum login, nenhum tracker. Suas notas ficam no banco da aplicação e você acessa direto.",
-  },
 ];
 
 const TIPS = [
@@ -180,9 +174,9 @@ const HomePage = () => {
           <h1>Estude Java do básico ao avançado</h1>
           <p>
             QuizByte é uma plataforma de estudo dividida em três áreas que trabalham
-            juntas: conteúdo teórico por tópico, anotações em Markdown e quiz por
-            assunto. Sem cadastro, sem distração, sem propaganda — só as ferramentas
-            que você precisa pra fixar o que aprendeu.
+            juntas: conteúdo teórico por tópico, anotações em Markdown vinculadas à
+            sua conta e quiz por assunto. Sem distração, sem propaganda — só as
+            ferramentas que você precisa pra fixar o que aprendeu.
           </p>
           <Link to="/conteudos" className="button-primary">
             Explorar conteúdos
